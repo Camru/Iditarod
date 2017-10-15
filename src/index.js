@@ -35,20 +35,18 @@ const checkpointCoords = sortedByCheckpoint.map(d => {
     return [+d.Longitude, +d.Latitude];
 });
 
-function createFeature(origin, destination) {
-    return {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [origin, destination] 
-        }
-    };
-}
-    
+console.log('checkpointCoords', checkpointCoords); // (camden)
 
 let route = {
     "type": "FeatureCollection",
-    "features": sortedByCheckpoint.map(cp => createFeature(+cp.Longitude, +cp.Latitude)) 
+    "features": [{
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": checkpointCoords
+        }
+    }]
+    
 };
 
 let point = {
@@ -101,6 +99,8 @@ function addPoint(long, lat) {
 let counter = 0;
 
 map.on('load', function () {
+
+    console.log('trail.length', trail.length); // (camden)
    
     map.addSource('route', {
         "type": "geojson",
