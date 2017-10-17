@@ -51,6 +51,12 @@ const checkpointSpeeds = sortedByCheckpoint.map(d => {
 });
 checkpointSpeeds.shift();
 
+const checkpointLayovers = sortedByCheckpoint.map(d => {
+    return +d['Elapsed Time'];
+});
+checkpointLayovers.shift();
+console.log('checkpointLayovers', checkpointLayovers); // (camden)
+
 const timesN = normalize(checkpointTimes);
 const speedsN = normalize(checkpointSpeeds); 
 
@@ -101,7 +107,6 @@ let point = {
 const distanceBetweenCheckpoints = cpFeatures.map(ft => turf.lineDistance(ft, 'miles'));
 console.log('distanceBetweenCheckpoints', distanceBetweenCheckpoints); // (camden)
 
-let trail = [];
 
 
 // use linear interpolation to get position of dot along path
@@ -114,22 +119,31 @@ let trail = [];
  * end = time
  * now = step * speed
  */
+let trail = [];
+let ruler = cheapRuler(64.5, 'miles');
 for (let i = 0; i < route.features.length; i++) {
     let step = 0.01;
-    for (let j = 0; j < 100; j++) {
+    let simSpeed = 0.05;
+    let segment = createFeature(0, 0);
+    let progress = 0;
+    
+    while ((progress * distanceBetweenCheckpoints[i]) <= distanceBetweenCheckpoints[i]) {
         const now = step * checkpointSpeeds[i];
-        const progress = lerp(now, 0, checkpointTimes[i]);
-        console.log('progress * distanceBetweenCheckpoints[i]', i, progress * distanceBetweenCheckpoints[i]); // (camden)
+        progress = lerp(now, 0, checkpointTimes[i]);
         // Takes a line and returns a point at a specified distance along the line.
-        const segment = turf.along(route.features[i], progress * distanceBetweenCheckpoints[i], 'miles');
+        segment = turf.along(route.features[i], progress * distanceBetweenCheckpoints[i], 'miles');
 
-        if (trail.length && segment.geometry.coordinates[0] === trail[trail.length-1][0]) {
-            console.log('here'); // (camden) 
-        } else {
-            trail.push(segment.geometry.coordinates);  
-        }
-        step += 0.01;
+        trail.push(segment.geometry.coordinates);  
+        step += simSpeed;
     }
+
+    step = 0.01;
+    while (step < checkpointLayovers[i]) {
+        segment = turf.along(route.features[i], distanceBetweenCheckpoints[i], 'miles');
+        trail.push(segment.geometry.coordinates);
+        step += 0.10
+    }
+
 }
 
 console.log('trail', trail); // (camden)
