@@ -1,5 +1,6 @@
 import Config from '../config';
 import {idit_data} from './assets/Iditarod_2017';
+import {normalize, lerp} from './utils'
 
 let checkpoints = { 
    'Fairbanks': 0,
@@ -25,6 +26,8 @@ let first = idit_data.filter(musher => {
    return musher.Name === 'Ryan Redington'; 
 });
 
+
+
 let sortedByCheckpoint = [];
 first.forEach(d => {
   sortedByCheckpoint[checkpoints[d.Checkpoint]] = d; 
@@ -37,11 +40,20 @@ const checkpointCoords = sortedByCheckpoint.map(d => {
     return [+d.Longitude, +d.Latitude];
 });
 
-const checkpointSpeeds = sortedByCheckpoint.map((d, index) => {
+const checkpointTimes = sortedByCheckpoint.map(d => {
     return +d.Time;
 });
+checkpointTimes.shift();
 
+
+const checkpointSpeeds = sortedByCheckpoint.map(d => {
+    return +d.Speed;
+});
 checkpointSpeeds.shift();
+
+const timesN = normalize(checkpointTimes);
+const speedsN = normalize(checkpointSpeeds); 
+
 
 function getCheckpointPairs (coords) {
     let pairs = [];
@@ -70,7 +82,6 @@ let cpFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
 let route = {
     "type": "FeatureCollection",
     "features": cpFeatures 
-    
 };
 
 let point = {
@@ -84,43 +95,46 @@ let point = {
     }]
 };
 
-// distance between checkpoints in miles
+// this is calculating the geodesic distance between checkpoints since we 
+// are drawing straight paths between checkpoints instead of the true path 
+// that a musher would use. So we don't use their distance traveled
 const distanceBetweenCheckpoints = cpFeatures.map(ft => turf.lineDistance(ft, 'miles'));
-// let lineDistance = turf.lineDistance(route.featuresk0], 'kilometers');
+console.log('distanceBetweenCheckpoints', distanceBetweenCheckpoints); // (camden)
 
 let trail = [];
 
 
-console.log('route.features', route.features); // (camden)
-console.log('distanceBetweenCheckpoints', distanceBetweenCheckpoints); // (camden)
-// route.features.forEach((feature, index) => {
-//     console.log('index', index); // (camden)
-//     const segment = turf.along(feature, (index / 1000) * distanceBetweenCheckpoints[index], 'miles');
-//     trail.push(segment.geometry.coordinates); 
-// });
+// use linear interpolation to get position of dot along path
+// progress = (now — start) / (end — start)
+// since we don't have a 'now', we can use a use a step variable to mimic 
+// elapsed time. For example, find the new position of the dot every minute
 
-let last;
+/**
+ * start = 0
+ * end = time
+ * now = step * speed
+ */
 for (let i = 0; i < route.features.length; i++) {
-    for (let j = 0; j < (distanceBetweenCheckpoints[i] / Math.ceil(checkpointSpeeds[i])) * 100; j++) {
-        const segment = turf.along(route.features[i], (j/100) * distanceBetweenCheckpoints[i], 'miles');
+    let step = 0.01;
+    for (let j = 0; j < 100; j++) {
+        const now = step * checkpointSpeeds[i];
+        const progress = lerp(now, 0, checkpointTimes[i]);
+        console.log('progress * distanceBetweenCheckpoints[i]', i, progress * distanceBetweenCheckpoints[i]); // (camden)
+        // Takes a line and returns a point at a specified distance along the line.
+        const segment = turf.along(route.features[i], progress * distanceBetweenCheckpoints[i], 'miles');
+
         if (trail.length && segment.geometry.coordinates[0] === trail[trail.length-1][0]) {
             console.log('here'); // (camden) 
         } else {
             trail.push(segment.geometry.coordinates);  
         }
+        step += 0.01;
     }
 }
 
 console.log('trail', trail); // (camden)
 
-// // // create list of segments along the trail 
-// for (let i = 0; i < lineDistance * 2; i++) {
-//     const segment = turf.along(route.features[0], (i / 2000) * lineDistance, 'kilometers');
-//     trail.push(segment.geometry.coordinates);
-// }
-
-
-// // Update the route with calculated arc coordinates
+// // // Update the route with calculated arc coordinates
 route.features[0].geometry.coordinates = trail;
 
 mapboxgl.accessToken = Config.API_KEY;
