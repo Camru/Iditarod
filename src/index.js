@@ -1,6 +1,7 @@
 import Config from '../config';
 import {idit_data} from './assets/Iditarod_2017';
 import {normalize, lerp} from './utils'
+import cheapRuler from 'cheap-ruler'
 
 let checkpoints = { 
    'Fairbanks': 0,
@@ -113,6 +114,7 @@ console.log('distanceBetweenCheckpoints', distanceBetweenCheckpoints); // (camde
 // progress = (now — start) / (end — start)
 // since we don't have a 'now', we can use a use a step variable to mimic 
 // elapsed time. For example, find the new position of the dot every minute
+// cheapRuler peformed path segment trail 3.6x faster than turf.js
 
 /**
  * start = 0
@@ -127,26 +129,25 @@ for (let i = 0; i < route.features.length; i++) {
     let segment = createFeature(0, 0);
     let progress = 0;
     
+   
     while ((progress * distanceBetweenCheckpoints[i]) <= distanceBetweenCheckpoints[i]) {
         const now = step * checkpointSpeeds[i];
         progress = lerp(now, 0, checkpointTimes[i]);
         // Takes a line and returns a point at a specified distance along the line.
-        segment = turf.along(route.features[i], progress * distanceBetweenCheckpoints[i], 'miles');
+        segment = ruler.along(route.features[i].geometry.coordinates, progress * distanceBetweenCheckpoints[i]);
 
-        trail.push(segment.geometry.coordinates);  
+        trail.push(segment);  
         step += simSpeed;
     }
 
     step = 0.01;
     while (step < checkpointLayovers[i]) {
-        segment = turf.along(route.features[i], distanceBetweenCheckpoints[i], 'miles');
-        trail.push(segment.geometry.coordinates);
+        segment = ruler.along(route.features[i].geometry.coordinates, distanceBetweenCheckpoints[i]);
+        trail.push(segment);
         step += 0.10
     }
 
 }
-
-console.log('trail', trail); // (camden)
 
 // // // Update the route with calculated arc coordinates
 route.features[0].geometry.coordinates = trail;
