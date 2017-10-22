@@ -1,3 +1,282 @@
+export const checkpointCoordinates = [
+    [-147.813, 64.8321],
+    [-149.0897, 64.5952],
+    [-150.6352, 65.0317],
+    [-152.0816, 65.201],
+    [-155.5011, 64.7386],
+    [-156.9352, 64.7322],
+    [-156.455, 65.6568],
+    [-157.8039, 64.8431],
+    [-158.1046, 64.7188],
+    [-158.7257, 64.3138],
+    [-160.7863, 63.8742],
+    [-161.1918, 64.3519],
+    [-161.168, 64.9286],
+    [-162.2494, 64.6162],
+    [-163.4067, 64.6798],
+    [-164.7519, 64.4681],
+    [-165.3996, 64.4964]
+];
+
+export const musherResults = [
+    {
+      "name": "Mitch Seavey",
+      "sumTime": 195.21999999999997
+    },
+    {
+      "name": "Dallas Seavey",
+      "sumTime": 197.85999999999999
+    },
+    {
+      "name": "Nicolas Petit",
+      "sumTime": 197.77000000000004
+    },
+    {
+      "name": "Joar Leifseth Ulsom",
+      "sumTime": 201.78999999999996
+    },
+    {
+      "name": "Jessie Royer",
+      "sumTime": 203.94000000000003
+    },
+    {
+      "name": "Wade Marrs",
+      "sumTime": 209.81
+    },
+    {
+      "name": "Ray Redington Jr.",
+      "sumTime": 212.8
+    },
+    {
+      "name": "Aliy Zirkle",
+      "sumTime": 213.53
+    },
+    {
+      "name": "Paul Gebhardt",
+      "sumTime": 214.22
+    },
+    {
+      "name": "Peter Kaiser",
+      "sumTime": 214.33000000000004
+    },
+    {
+      "name": "Jeff King",
+      "sumTime": 215.75000000000003
+    },
+    {
+      "name": "Ramey Smyth",
+      "sumTime": 216.39000000000001
+    },
+    {
+      "name": "Michelle Phillips",
+      "sumTime": 217.78
+    },
+    {
+      "name": "Hans Gatt",
+      "sumTime": 218.26
+    },
+    {
+      "name": "Ralph Johannessen",
+      "sumTime": 218.44999999999996
+    },
+    {
+      "name": "Ryan Redington",
+      "sumTime": 218.90000000000006
+    },
+    {
+      "name": "Ken Anderson",
+      "sumTime": 219.3
+    },
+    {
+      "name": "John Baker",
+      "sumTime": 219.73999999999998
+    },
+    {
+      "name": "Katherine Keith",
+      "sumTime": 220.14999999999995
+    },
+    {
+      "name": "Jason Mackey",
+      "sumTime": 220.26000000000002
+    },
+    {
+      "name": "Robert Redington",
+      "sumTime": 221.25999999999996
+    },
+    {
+      "name": "Linwood Fiedler",
+      "sumTime": 222.03000000000003
+    },
+    {
+      "name": "Richie Diehl",
+      "sumTime": 223.91000000000003
+    },
+    {
+      "name": "Sebastien Vergnaud",
+      "sumTime": 224.08000000000004
+    },
+    {
+      "name": "Mats Pettersson",
+      "sumTime": 224.97999999999996
+    },
+    {
+      "name": "Lars Monsen",
+      "sumTime": 225.58999999999995
+    },
+    {
+      "name": "Hugh Neff",
+      "sumTime": 226.05999999999997
+    },
+    {
+      "name": "Rick Casillo",
+      "sumTime": 227.10999999999999
+    },
+    {
+      "name": "Noah Burmeister",
+      "sumTime": 228.43
+    },
+    {
+      "name": "Cody Strathe",
+      "sumTime": 230.46000000000004
+    },
+    {
+      "name": "Ketil Reitan",
+      "sumTime": 230.48000000000002
+    },
+    {
+      "name": "Martin Buser",
+      "sumTime": 230.80000000000004
+    },
+    {
+      "name": "Scott Smith",
+      "sumTime": 234.2
+    },
+    {
+      "name": "Melissa Stewart",
+      "sumTime": 234.29999999999998
+    },
+    {
+      "name": "Nathan Schroeder",
+      "sumTime": 235.13000000000002
+    },
+    {
+      "name": "Nicolas Vanier",
+      "sumTime": 236.89
+    },
+    {
+      "name": "Seth Barnes",
+      "sumTime": 236.93
+    },
+    {
+      "name": "Kristy Berington",
+      "sumTime": 240.09
+    },
+    {
+      "name": "Karin Hendrickson",
+      "sumTime": 240.26999999999998
+    },
+    {
+      "name": "Allen Moore",
+      "sumTime": 240.27
+    },
+    {
+      "name": "Anna Berington",
+      "sumTime": 240.37
+    },
+    {
+      "name": "Laura Neese",
+      "sumTime": 243.51000000000002
+    },
+    {
+      "name": "Larry Daugherty",
+      "sumTime": 256.21
+    },
+    {
+      "name": "Jodi Bailey",
+      "sumTime": 256.84000000000003
+    },
+    {
+      "name": "Geir Idar Hjelvik",
+      "sumTime": 258.36999999999995
+    },
+    {
+      "name": "Charley Bejna",
+      "sumTime": 260.03999999999996
+    },
+    {
+      "name": "DeeDee Jonrowe",
+      "sumTime": 261.40000000000003
+    },
+    {
+      "name": "Gunnar Johnson",
+      "sumTime": 261.53
+    },
+    {
+      "name": "Dave Delcourt",
+      "sumTime": 262
+    },
+    {
+      "name": "Justin High",
+      "sumTime": 262.7
+    },
+    {
+      "name": "Justin Stielstra",
+      "sumTime": 264.15
+    },
+    {
+      "name": "Trent Herbst",
+      "sumTime": 264.69
+    },
+    {
+      "name": "Kristin Bacon",
+      "sumTime": 269.26000000000005
+    },
+    {
+      "name": "Misha Wiljes",
+      "sumTime": 273.56
+    },
+    {
+      "name": "Joe Carson",
+      "sumTime": 277.30999999999995
+    },
+    {
+      "name": "Thomas Rosenbloom",
+      "sumTime": 277.53999999999996
+    },
+    {
+      "name": "Zoya DeNure",
+      "sumTime": 282.09000000000003
+    },
+    {
+      "name": "Michael Baker",
+      "sumTime": 282.3
+    },
+    {
+      "name": "Matthew Failor",
+      "sumTime": 282.53
+    },
+    {
+      "name": "Jimmy Lebling",
+      "sumTime": 286.90999999999997
+    },
+    {
+      "name": "Paul Hansen",
+      "sumTime": 288.83
+    },
+    {
+      "name": "Peter Reuter",
+      "sumTime": 289.0700000000001
+    },
+    {
+      "name": "Alan Eischens",
+      "sumTime": 289.56
+    },
+    {
+      "name": "Cindy Abbott",
+      "sumTime": 290.03000000000003
+    }
+  ];
+
 export const idit_data = [
 {"Number":"2","Name":"Ryan Redington","Status":"Veteran","Country":"United States","Checkpoint":"Fairbanks","Latitude":"64.8321","Longitude":"-147.813","Distance":"","Time":"0","Speed":"","Arrival Date":"","Arrival Time":"","Arrival Dogs":"","Elapsed Time":"0","Departure Date":"03/06/2017","Departure Time":"11:00:00","Departure Dogs":"16"},
 {"Number":"3","Name":"Otto Balogh","Status":"Rookie","Country":"Hungary","Checkpoint":"Fairbanks","Latitude":"64.8321","Longitude":"-147.813","Distance":"","Time":"0","Speed":"","Arrival Date":"","Arrival Time":"","Arrival Dogs":"","Elapsed Time":"","Departure Date":"","Departure Time":"","Departure Dogs":""},

@@ -69,67 +69,27 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__assets_Iditarod_2017__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_cheap_ruler__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_cheap_ruler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_cheap_ruler__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__map__ = __webpack_require__(6);
+
+// import dom from './dom';
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    API_KEY: 'pk.eyJ1IjoidGhlY2FtZGVuIiwiYSI6Ikw0RDFKbjAifQ.6YLg6ozUZYD0FEiKv46LGA'
+});
 
 
 
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-
-
-
-function getMusherData(numberOfMushers) {
-    let data = [];
-
-    // musher bibs start at 2
-    for (let i = 2; i < numberOfMushers + 2; i++) {
-        let nums = ["16", "18", "24"];
-        let groupedByBib = __WEBPACK_IMPORTED_MODULE_1__assets_Iditarod_2017__["a" /* idit_data */].filter(d => d.Number == i)
-        if (groupedByBib.length === 17 && nums.includes(groupedByBib[0].Number)) {
-            data.push(groupedByBib); 
-        }
-    }
-    return data;
-}
-
-function sortByCheckpoint(musherData) {
-    const checkpoints = { 
-        'Fairbanks': 0,
-        'Nenana': 1,
-        'Manley': 2,
-        'Tanana': 3,
-        'Ruby': 4,
-        'Galena': 5,
-        'Huslia': 6,
-        'Koyukuk': 7,
-        'Nulato': 8,
-        'Kaltag': 9,
-        'Unalakleet': 10,
-        'Shaktoolik': 11,
-        'Koyuk': 12,
-        'Elim': 13,
-        'White Mountain': 14,
-        'Safety': 15,
-        'Nome': 16
-    };
-
-    let sorted = [];
-    return musherData.map(d => {
-        return sorted[checkpoints[d.Checkpoint]] = d
-    });
-    
-}
-
-
-let data = getMusherData(70);
-let sortedByCheckpoint = sortByCheckpoint(data);
-const numberOfMushers = sortedByCheckpoint.length;
-console.log('sortedByCheckpoint', sortedByCheckpoint); // (camden)
-
-// get coordinates of each checkpoint for geoJSON line layer of Iditarod trail 
+"use strict";
 const checkpointCoordinates = [
     [-147.813, 64.8321],
     [-149.0897, 64.5952],
@@ -149,254 +109,270 @@ const checkpointCoordinates = [
     [-164.7519, 64.4681],
     [-165.3996, 64.4964]
 ];
+/* harmony export (immutable) */ __webpack_exports__["a"] = checkpointCoordinates;
 
-function getDataPoint (mushers, key) {
-    return mushers.map(musher => {
-        let output = musher.map(d => {
-            return +d[key];
-        });
 
-        // we don't need the first data point, which is the start of the race
-        return output.slice(1);
-    });
-}
-
-function getCheckpointPairs (coords) {
-    let pairs = [];
-    for (var i=0 ; i<coords.length ; i++) {
-        if (coords[i+1] !== undefined) {
-            pairs.push ([coords[i], coords[i+1]]);
-        } 
+const musherResults = [
+    {
+      "name": "Mitch Seavey",
+      "sumTime": 195.21999999999997
+    },
+    {
+      "name": "Dallas Seavey",
+      "sumTime": 197.85999999999999
+    },
+    {
+      "name": "Nicolas Petit",
+      "sumTime": 197.77000000000004
+    },
+    {
+      "name": "Joar Leifseth Ulsom",
+      "sumTime": 201.78999999999996
+    },
+    {
+      "name": "Jessie Royer",
+      "sumTime": 203.94000000000003
+    },
+    {
+      "name": "Wade Marrs",
+      "sumTime": 209.81
+    },
+    {
+      "name": "Ray Redington Jr.",
+      "sumTime": 212.8
+    },
+    {
+      "name": "Aliy Zirkle",
+      "sumTime": 213.53
+    },
+    {
+      "name": "Paul Gebhardt",
+      "sumTime": 214.22
+    },
+    {
+      "name": "Peter Kaiser",
+      "sumTime": 214.33000000000004
+    },
+    {
+      "name": "Jeff King",
+      "sumTime": 215.75000000000003
+    },
+    {
+      "name": "Ramey Smyth",
+      "sumTime": 216.39000000000001
+    },
+    {
+      "name": "Michelle Phillips",
+      "sumTime": 217.78
+    },
+    {
+      "name": "Hans Gatt",
+      "sumTime": 218.26
+    },
+    {
+      "name": "Ralph Johannessen",
+      "sumTime": 218.44999999999996
+    },
+    {
+      "name": "Ryan Redington",
+      "sumTime": 218.90000000000006
+    },
+    {
+      "name": "Ken Anderson",
+      "sumTime": 219.3
+    },
+    {
+      "name": "John Baker",
+      "sumTime": 219.73999999999998
+    },
+    {
+      "name": "Katherine Keith",
+      "sumTime": 220.14999999999995
+    },
+    {
+      "name": "Jason Mackey",
+      "sumTime": 220.26000000000002
+    },
+    {
+      "name": "Robert Redington",
+      "sumTime": 221.25999999999996
+    },
+    {
+      "name": "Linwood Fiedler",
+      "sumTime": 222.03000000000003
+    },
+    {
+      "name": "Richie Diehl",
+      "sumTime": 223.91000000000003
+    },
+    {
+      "name": "Sebastien Vergnaud",
+      "sumTime": 224.08000000000004
+    },
+    {
+      "name": "Mats Pettersson",
+      "sumTime": 224.97999999999996
+    },
+    {
+      "name": "Lars Monsen",
+      "sumTime": 225.58999999999995
+    },
+    {
+      "name": "Hugh Neff",
+      "sumTime": 226.05999999999997
+    },
+    {
+      "name": "Rick Casillo",
+      "sumTime": 227.10999999999999
+    },
+    {
+      "name": "Noah Burmeister",
+      "sumTime": 228.43
+    },
+    {
+      "name": "Cody Strathe",
+      "sumTime": 230.46000000000004
+    },
+    {
+      "name": "Ketil Reitan",
+      "sumTime": 230.48000000000002
+    },
+    {
+      "name": "Martin Buser",
+      "sumTime": 230.80000000000004
+    },
+    {
+      "name": "Scott Smith",
+      "sumTime": 234.2
+    },
+    {
+      "name": "Melissa Stewart",
+      "sumTime": 234.29999999999998
+    },
+    {
+      "name": "Nathan Schroeder",
+      "sumTime": 235.13000000000002
+    },
+    {
+      "name": "Nicolas Vanier",
+      "sumTime": 236.89
+    },
+    {
+      "name": "Seth Barnes",
+      "sumTime": 236.93
+    },
+    {
+      "name": "Kristy Berington",
+      "sumTime": 240.09
+    },
+    {
+      "name": "Karin Hendrickson",
+      "sumTime": 240.26999999999998
+    },
+    {
+      "name": "Allen Moore",
+      "sumTime": 240.27
+    },
+    {
+      "name": "Anna Berington",
+      "sumTime": 240.37
+    },
+    {
+      "name": "Laura Neese",
+      "sumTime": 243.51000000000002
+    },
+    {
+      "name": "Larry Daugherty",
+      "sumTime": 256.21
+    },
+    {
+      "name": "Jodi Bailey",
+      "sumTime": 256.84000000000003
+    },
+    {
+      "name": "Geir Idar Hjelvik",
+      "sumTime": 258.36999999999995
+    },
+    {
+      "name": "Charley Bejna",
+      "sumTime": 260.03999999999996
+    },
+    {
+      "name": "DeeDee Jonrowe",
+      "sumTime": 261.40000000000003
+    },
+    {
+      "name": "Gunnar Johnson",
+      "sumTime": 261.53
+    },
+    {
+      "name": "Dave Delcourt",
+      "sumTime": 262
+    },
+    {
+      "name": "Justin High",
+      "sumTime": 262.7
+    },
+    {
+      "name": "Justin Stielstra",
+      "sumTime": 264.15
+    },
+    {
+      "name": "Trent Herbst",
+      "sumTime": 264.69
+    },
+    {
+      "name": "Kristin Bacon",
+      "sumTime": 269.26000000000005
+    },
+    {
+      "name": "Misha Wiljes",
+      "sumTime": 273.56
+    },
+    {
+      "name": "Joe Carson",
+      "sumTime": 277.30999999999995
+    },
+    {
+      "name": "Thomas Rosenbloom",
+      "sumTime": 277.53999999999996
+    },
+    {
+      "name": "Zoya DeNure",
+      "sumTime": 282.09000000000003
+    },
+    {
+      "name": "Michael Baker",
+      "sumTime": 282.3
+    },
+    {
+      "name": "Matthew Failor",
+      "sumTime": 282.53
+    },
+    {
+      "name": "Jimmy Lebling",
+      "sumTime": 286.90999999999997
+    },
+    {
+      "name": "Paul Hansen",
+      "sumTime": 288.83
+    },
+    {
+      "name": "Peter Reuter",
+      "sumTime": 289.0700000000001
+    },
+    {
+      "name": "Alan Eischens",
+      "sumTime": 289.56
+    },
+    {
+      "name": "Cindy Abbott",
+      "sumTime": 290.03000000000003
     }
-
-    return pairs;
-} 
-
-function createFeature (long, lat) {
-    return {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [long, lat]
-        }
-    } 
-}
-
-function createPoints (mushers, long, lat) {
-
-   let features = mushers.map(musher => {
-        return {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [long, lat]
-            },
-            "properties": {
-                "title": musher[0].Number,
-                "myColor": musher[0].Number 
-            }
-        }
-    });
-
-    return {
-        "type": "FeatureCollection",
-        "features": features
-    };
-}
-
-let checkpointTimes = getDataPoint(sortedByCheckpoint, 'Time');
-let checkpointSpeeds = getDataPoint(sortedByCheckpoint, 'Speed');
-let checkpointLayovers = getDataPoint(sortedByCheckpoint, 'Elapsed Time');
-let checkpointPairs = getCheckpointPairs(checkpointCoordinates);
-let cpFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
-
-const originLong = checkpointCoordinates[0][0];
-const originLat = checkpointCoordinates[0][1]; 
-let musherPoints = createPoints(sortedByCheckpoint, originLong, originLat); 
-console.log('musherPoints', musherPoints); // (camden)
-
-let route = {
-    "type": "FeatureCollection",
-    "features": cpFeatures 
-};
+  ];
+/* harmony export (immutable) */ __webpack_exports__["c"] = musherResults;
 
 
-
-// this is calculating the geodesic distance between checkpoints since we 
-// are drawing straight paths between checkpoints instead of the true path 
-// that a musher would use. So we don't use their distance traveled
-//TODO: (camden) change turf to cheap_ruler
-
-let ruler = __WEBPACK_IMPORTED_MODULE_3_cheap_ruler___default()(64.5, 'miles');
-const distanceBetweenCheckpoints = cpFeatures.map(ft => ruler.lineDistance(ft.geometry.coordinates));
-console.log('distanceBetweenCheckpoints', distanceBetweenCheckpoints); // (camden)
-
-
-
-// use linear interpolation to get position of dot along path
-// progress = (now — start) / (end — start)
-// since we don't have a 'now', we can use a use a step variable to mimic 
-// elapsed time. For example, find the new position of the dot every minute
-// cheapRuler peformed path segment trail 3.6x faster than turf.js
-
-/**
- * start = 0
- * end = time
- * now = step * speed
- */
-let trails = [];
-for (let k = 0; k < numberOfMushers; k++) {
-    let trail = [];
-    for (let i = 0; i < route.features.length; i++) {
-        let step = 0.01;
-        let simSpeed = 0.05;
-        let segment = createFeature(0, 0);
-        let progress = 0;
-        
-       
-        while ((progress * distanceBetweenCheckpoints[i]) <= distanceBetweenCheckpoints[i]) {
-            const now = step * checkpointSpeeds[k][i];
-            progress = Object(__WEBPACK_IMPORTED_MODULE_2__utils__["a" /* lerp */])(now, 0, checkpointTimes[k][i]);
-            // Takes a line and returns a point at a specified distance along the line.
-            segment = ruler.along(route.features[i].geometry.coordinates, progress * distanceBetweenCheckpoints[i]);
-    
-            trail.push(segment);  
-            step += simSpeed;
-        }
-    
-        step = 0.01;
-        while (step < checkpointLayovers[k][i]) {
-            segment = ruler.along(route.features[i].geometry.coordinates, distanceBetweenCheckpoints[i]);
-            trail.push(segment);
-            step += 0.10
-        }
-    
-    }
-    trails.push(trail);
-
-}
-
-console.log('trails', trails); // (camden)
-
-
-
-// // // Update the route with calculated arc coordinates
-route.features[0].geometry.coordinates = trails;
-
-mapboxgl.accessToken = __WEBPACK_IMPORTED_MODULE_0__config__["a" /* default */].API_KEY;
-
-let map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
-    center: [-149.4937, 64.2008],
-    zoom: 4,
-    pitch: 40,
-    bearing: 40
-});
-
-
-map.on('load', function () {
-
-    map.addSource('route', {
-        "type": "geojson",
-        "data": route
-    });
-
-    map.addLayer({
-        "id": "route",
-        "source": "route",
-        "type": "line",
-        "paint": {
-            "line-width": 2,
-            "line-color": "#007cbf"
-        }
-    });
-
-    map.addSource('point', {
-        "type": "geojson",
-        "data": musherPoints 
-    });
-
-    map.addLayer({
-        "id": "point",
-        "source": "point",
-        "type": "circle",
-        "paint": {
-            "circle-radius": 5,
-            "circle-color":  {
-                property: 'myColor',
-                type: 'categorical',
-                stops: [
-                ['16', "#FFFF00"],
-                ['18', '#fbb03b'],
-                ['24', '#ff00FF']
-                ]
-            }
-        }
-       
-    });
-    
-let counter = 0;
-    let routeInd = 0;
-    function play() {
-        // Update point geometry to a new position based on counter denoting
-        // the index to access the arc.
-        
-        // if (counter === null) return;
-        for (let i = 0; i < musherPoints.features.length; i++) {
-            if (counter < route.features[0].geometry.coordinates[i].length) {
-                musherPoints.features[i].geometry.coordinates = route.features[0].geometry.coordinates[i][counter];
-            } else {
-                console.log('bib', musherPoints.features[i].properties.myColor); 
-                // musherPoints.features.splice(i, 1);
-                // i = 0;
-            }  
-        }
-
-        // Update the source with this new data.
-        map.getSource('point').setData(musherPoints);
-
-        // // Request the next frame of animation so long as destination has not
-        // // been reached.
-        // if (point.features[0].geometry.coordinates[0] !== destination[0]) {
-        //     requestAnimationFrame(play);
-        // }
-
-        requestAnimationFrame(play);
-
-        counter = counter + 1;
-    }
-
-
-    function reset () {
-        counter = 0;
-    }
-
-    const playBtn = document.getElementById('play-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    playBtn.addEventListener('click', play);
-    resetBtn.addEventListener('click', reset);
-
-});
-
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-    API_KEY: 'pk.eyJ1IjoidGhlY2FtZGVuIiwiYSI6Ikw0RDFKbjAifQ.6YLg6ozUZYD0FEiKv46LGA'
-});
-
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 const idit_data = [
 {"Number":"2","Name":"Ryan Redington","Status":"Veteran","Country":"United States","Checkpoint":"Fairbanks","Latitude":"64.8321","Longitude":"-147.813","Distance":"","Time":"0","Speed":"","Arrival Date":"","Arrival Time":"","Arrival Dogs":"","Elapsed Time":"0","Departure Date":"03/06/2017","Departure Time":"11:00:00","Departure Dogs":"16"},
 {"Number":"3","Name":"Otto Balogh","Status":"Rookie","Country":"Hungary","Checkpoint":"Fairbanks","Latitude":"64.8321","Longitude":"-147.813","Distance":"","Time":"0","Speed":"","Arrival Date":"","Arrival Time":"","Arrival Dogs":"","Elapsed Time":"","Departure Date":"","Departure Time":"","Departure Dogs":""},
@@ -1545,7 +1521,7 @@ const idit_data = [
 {"Number":"53","Name":"Peter Reuter","Status":"Rookie","Country":"United States","Checkpoint":"Nome","Latitude":"64.4964","Longitude":"-165.3996","Distance":"22","Time":"3.6","Speed":"6.11","Arrival Date":"03/18/2017","Arrival Time":"14:45:38","Arrival Dogs":"9","Elapsed Time":"0","Departure Date":"","Departure Time":"","Departure Dogs":""},
 {"Number":"31","Name":"Cindy Abbott","Status":"Veteran","Country":"United States","Checkpoint":"Nome","Latitude":"64.4964","Longitude":"-165.3996","Distance":"22","Time":"3.07","Speed":"7.17","Arrival Date":"03/18/2017","Arrival Time":"14:57:31","Arrival Dogs":"12","Elapsed Time":"0","Departure Date":"","Departure Time":"","Departure Dogs":""}
 ]
-/* harmony export (immutable) */ __webpack_exports__["a"] = idit_data;
+/* harmony export (immutable) */ __webpack_exports__["b"] = idit_data;
 
 
 /***/ }),
@@ -1991,6 +1967,473 @@ function interpolate(a, b, t) {
         a[1] + dy * t
     ];
 }
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return route; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return trails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return musherPoints; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_cheap_ruler__);
+
+
+
+
+const data = getMusherData(74);
+const sortedByCheckpoint = sortByCheckpoint(data);
+console.log('sortedByCheckpoint', sortedByCheckpoint); // (camden)
+const musherPoints = createMusherPoints(sortedByCheckpoint); 
+
+const checkpointPairs = getCheckpointPairs(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */]);
+const checkpointFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
+console.log('checkpointFeatures', checkpointFeatures); // (camden)
+let route = {
+    "type": "FeatureCollection",
+    "features": checkpointFeatures 
+};
+
+const trails = getTrailPaths(route, sortedByCheckpoint);
+
+console.log('route.features', route.features);
+console.log('trails', trails); // (camden)
+// Update the route with the calculated race trajectory of each musher 
+// let full = createFeature([0, 0], [0, 0]);
+// route.features.push(full);
+// route.features[16].geometry.coordinates = trails;
+// route.features[1].geometry.coordinates = [
+//     [0, 0],
+//     [0, 0]
+// ];
+// route.features[2].geometry.coordinates = [
+//     [0, 0],
+//     [0, 0]
+// ];
+
+// console.log('route.features after', route.features); // (camden)
+
+
+// const checkpointTimes = getDataPointWithName(sortedByCheckpoint, 'Time');
+// let sorted = checkpointTimes.sort((a, b) => {
+
+//     return a.sumTime - b.sumTime;
+// });
+// console.log('sorted', sorted); // (camden)
+// function getDataPointWithName (mushers, key) {
+//     return mushers.map(musher => {
+//         let obj = {};
+//         let test = musher.map(d => {
+//             return +d['Time'] + (+d['Elapsed Time']);
+//         });
+//         let updated = test.slice(1);
+
+//         obj['name'] = musher[0].Name;
+//         obj['sumTime'] = updated.reduce((a,b) => a+b);
+
+//         // we don't need the first data point, which is the start of the race
+//         return  obj;
+//     });
+// }
+
+function getDataPoint (mushers, key) {
+    return mushers.map(musher => {
+        const output = musher.map(d => {
+            return +d[key];
+        });
+
+        // we don't need the first data point, which is the start of the race
+        return output.slice(1);
+    });
+}
+
+function getCheckpointPairs (coords) {
+    let pairs = [];
+    for (var i=0 ; i < coords.length ; i++) {
+        if (coords[i+1] !== undefined) {
+            pairs.push ([coords[i], coords[i+1]]);
+        } 
+    }
+
+    return pairs;
+} 
+
+function createFeature (long, lat) {
+    return {
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [long, lat]
+        }
+    } 
+}
+
+function createMusherPoints (mushers) {
+    // lat and long of the start of the race
+   const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
+   const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1]; 
+
+   const features = mushers.map(musher => {
+        return {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [originLong, originLat]
+            },
+            "properties": {
+                "title": musher[0].Number,
+                "myColor": musher[0].Number,
+                "name": musher[0].Name
+            }
+        }
+    });
+
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    };
+}
+
+function getMusherData(numberOfMushers) {
+    let data = [];
+
+    // musher bib numbers start at 2
+    const bibStart = 2;
+
+    let nums = ['16', '18', '24', '38'];
+
+    for (let i = bibStart; i < numberOfMushers + bibStart; i++) {
+        let groupedByBib = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["b" /* idit_data */].filter(d => d.Number == i)
+            if (groupedByBib.length === 17) {
+
+              if (nums.includes(groupedByBib[0].Number)) {
+                data.push(groupedByBib); 
+            }
+        }
+        
+    }
+
+    return data;
+}
+
+function sortByCheckpoint(musherData) {
+    const checkpoints = { 
+        'Fairbanks': 0,
+        'Nenana': 1,
+        'Manley': 2,
+        'Tanana': 3,
+        'Ruby': 4,
+        'Galena': 5,
+        'Huslia': 6,
+        'Koyukuk': 7,
+        'Nulato': 8,
+        'Kaltag': 9,
+        'Unalakleet': 10,
+        'Shaktoolik': 11,
+        'Koyuk': 12,
+        'Elim': 13,
+        'White Mountain': 14,
+        'Safety': 15,
+        'Nome': 16
+    };
+
+    let sorted = [];
+    return musherData.map(d => {
+        return sorted[checkpoints[d.Checkpoint]] = d
+    });
+    
+}
+
+/**
+ * In order to simulate the speed each musher travels the trail, we need to 
+ * break up the entire trail into segments which represent the paths between
+ * each checkpoint in the race. Then those segments are calculated for each 
+ * musher, taking into account their speed and the time they spent on layover 
+ * at each checkpoint. Each segment is essentially divided up like a ruler is by
+ * inches. The slower the musher, the more slices there are in the segment, 
+ * which translates to the dot traveling slower over the trail.
+ */
+
+function getTrailPaths(route, data) {
+    const checkpointTimes = getDataPoint(data, 'Time');
+    const checkpointSpeeds = getDataPoint(data, 'Speed');
+    const checkpointLayovers = getDataPoint(data, 'Elapsed Time');
+    const numberOfMushers = data.length;
+    const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
+    const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1];
+
+    // this calculates the geodesic distance between checkpoints since we 
+    // are drawing straight paths between checkpoints instead of the true path 
+    // that a musher would use. So we don't use their provided distance traveled
+    const ruler = __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default()(64.5, 'miles');
+    const distanceBetweenCheckpoints = route.features.map(ft => ruler.lineDistance(ft.geometry.coordinates));
+
+    let trails = [];
+    for (let i = 0; i < numberOfMushers; i++) {
+        let trail = [];
+        for (let j = 0; j < route.features.length; j++) {
+            const simSpeed = 0.5;
+            const layoverSimSpeed = 0.1;
+            let step = 0;
+            let progress = 0;
+
+            /** 
+             * use linear interpolation to get position of dot along path.
+             * Since we don't have a 'now', we can use a use a step variable to 
+             * mimic elapsed time. For example, find the new position of the dot 
+             * every minute.
+             * 
+             * cheapRuler peformed segment calculation 3.6x faster than 
+             * turf.js based on performance.now()
+            */
+            let distanceToCheckpoint = 0;
+            while (distanceToCheckpoint < distanceBetweenCheckpoints[j]) {
+                const now = step * checkpointSpeeds[i][j];
+                progress = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* lerp */])(now, 0, checkpointTimes[i][j]);
+
+                // Takes a line and returns a point at a specified distance along the line.
+                let segment = ruler.along(
+                    route.features[j].geometry.coordinates,
+                    progress * distanceBetweenCheckpoints[j]
+                );
+
+                //TODO: (camden) test trail lengths of top 3
+                trail.push(segment);
+                step += simSpeed;
+                distanceToCheckpoint = progress * distanceBetweenCheckpoints[j];
+            }
+
+            step = 0.01; // reset step
+            while (step < checkpointLayovers[i][j]) {
+                let segment = ruler.along(
+                    route.features[j].geometry.coordinates,
+                    distanceBetweenCheckpoints[j]
+                );
+                trail.push(segment);
+                step += layoverSimSpeed;
+            }
+        }
+        trails.push(trail);
+    }
+    return trails;
+}
+
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(1);
+
+
+
+mapboxgl.accessToken = __WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */].API_KEY;
+console.log('musherPoints', __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]); // (camden)
+
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-157.0, 64.2008],
+    zoom: 5,
+    pitch: 40,
+    bearing: 40
+});
+
+map.on('load', function() {
+    map.addSource('route', {
+        type: 'geojson',
+        data: __WEBPACK_IMPORTED_MODULE_1__store__["b" /* route */]
+    });
+
+    map.addLayer({
+        id: 'route',
+        source: 'route',
+        type: 'line',
+        paint: {
+            'line-width': 2,
+            'line-color': '#007cbf'
+        }
+    });
+
+    map.addSource('point', {
+        type: 'geojson',
+        data: __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]
+    });
+
+    map.addLayer({
+        id: 'point',
+        source: 'point',
+        type: 'circle',
+        paint: {
+            'circle-radius': 10,
+            'circle-color': {
+                property: 'myColor',
+                type: 'categorical',
+                stops: [['24', '#e74c3c']],
+                default: '#F0F'
+            }
+        }
+    });
+
+    map.addSource('highlightPoint', {
+        type: 'geojson',
+        data: {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-157.0, 64.2008] 
+                }}]
+            } 
+    });
+
+    map.addLayer({
+        id: 'highlight',
+        source: 'highlightPoint',
+        type: 'circle',
+        'layout': {
+            'visibility': 'none'
+        },
+        paint: {
+            'circle-radius': 10,
+            'circle-color': '#FFFFFF'
+        }
+    });
+});
+
+function highlightMusherPoint (coords) {
+    let updatedData = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": coords 
+            }}]
+        } 
+
+    // let visibility = map.getLayoutProperty('highlight', 'visibility');
+    map.setLayoutProperty('highlight', 'visibility', 'visible');
+    map.getSource('highlightPoint').setData(updatedData); 
+}
+
+
+createMusherListElement(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["c" /* musherResults */]);
+let hoveringOn = null;
+function createMusherListElement (results) {
+    const list = document.getElementById('name-list');
+    const listItemClass = 'list-item';
+    for (let i = 0; i < results.length; i++) {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = results[i].name;
+        listItem.className = listItemClass;
+        list.appendChild(listItem);
+    }
+
+    list.addEventListener('mouseover', function (e) {
+        if (e.target.className === listItemClass) {
+            const {childNodes} = list;
+            childNodes.forEach(child => child.id = "");
+            hoveringOn = e.target.innerHTML;
+            e.target.id = 'list-item-highlighted';
+        };
+    }, false);
+}
+
+let counter = 0;
+let raf;
+function play() {
+    // Update point geometry to a new position based on counter denoting
+    // the index to access the arc.
+
+    // if (counter === null) return;
+    for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.length; i++) {
+        if (__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.name === hoveringOn) {
+            let currentPos = __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter]; // (camden)
+            highlightMusherPoint(currentPos);
+        }
+        if (counter < __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i].length) {
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].geometry.coordinates =
+                __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter];
+        } else {
+            console.log('bib', __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.myColor);
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.splice(i, 1);
+            __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */].splice(i, 1);
+            // i = 0;
+        }
+    }
+    // map.on('mouseenter', 'point', function(e) {
+    //     // Change the cursor style as a UI indicator.
+    //     map.getCanvas().style.cursor = 'pointer';
+
+    //     // Populate the popup and set its coordinates
+    //     // based on the feature found.
+    //     console.log('e', e); // (camden)
+
+    //     map.addSource(e.lngLat.lng, {
+    //         type: 'geojson',
+    //         data: {
+    //             "type": "FeatureCollection",
+    //             "features": [{
+    //                 "type": "Feature",
+    //                 "geometry": {
+    //                     "type": "Point",
+    //                     "coordinates": [e.lngLat.lng, e.lngLat.lat] 
+    //                 }}]
+    //             }
+    //     }); 
+
+    //     map.addLayer({
+    //         id: e.lngLat.ln,
+    //         source: 'test1',
+    //         type: 'circle',
+    //         paint: {
+    //             'circle-radius': 10,
+    //             'circle-color': '#FFFF00'
+               
+    //         }
+    //     });
+    // });
+
+    // Update the source with this new data.
+    map.getSource('point').setData(__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]);
+
+    // // Request the next frame of animation so long as destination has not
+    // // been reached.
+    // if (point.features[0].geometry.coordinates[0] !== destination[0]) {
+    //     requestAnimationFrame(play);
+    // }
+
+    raf = requestAnimationFrame(play);
+
+    counter = counter + 1;
+}
+
+function reset() {
+    counter = 0;
+}
+
+function stop() {
+    cancelAnimationFrame(raf);
+}
+
+const playBtn = document.getElementById('play-btn');
+const stopBtn = document.getElementById('stop-btn');
+const resetBtn = document.getElementById('reset-btn');
+playBtn.addEventListener('click', play);
+stopBtn.addEventListener('click', stop);
+resetBtn.addEventListener('click', reset);
+
+/* unused harmony default export */ var _unused_webpack_default_export = (map);
 
 
 /***/ })

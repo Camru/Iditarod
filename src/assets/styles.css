@@ -3,5 +3,25 @@ html {
     color: white;
     font-family: 'Lato';
 }
-#map {
+
+body {
+    display: flex;
+}
+
+.map-container {
+    flex-grow: 1;
+}
+
+.name-container {
+    width: 200px;
+    cursor: pointer;
+}
+
+.list-item:hover {
+    
+    color: #FFFF00;
+}
+
+#list-item-highlighted {
+    color: rgb(25, 0, 255);
 }

@@ -13,11 +13,17 @@
 		<link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet">
 	</head>
 	<body>
-		<h1>2017 Iditarod</h1>
-
-		<div id="map" style="width:80%; height:600px;"></div>
-		<button id="play-btn">play</button> 
-		<button id="reset-btn">reset</button> 
+		<div class="map-container">
+			<div id="map" style="width:80%; height:600px;"></div>
+			<div class="controls">
+				<button id="play-btn">play</button> 
+				<button id="stop-btn">stop</button> 
+				<button id="reset-btn">reset</button>
+			</div>
+		</div>
+		<div class="name-container">
+			<ol id="name-list"></ol>
+		</div>
 		
 		<!-- Third-party libraries -->
 		<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
