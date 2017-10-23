@@ -1,5 +1,5 @@
 import {idit_data, checkpointCoordinates} from './assets/Iditarod_2017';
-import {lerp} from './utils'
+import {lerp, normalize} from './utils'
 import cheapRuler from 'cheap-ruler'
 
 const data = getMusherData(74);
@@ -121,15 +121,15 @@ function getMusherData(numberOfMushers) {
     // musher bib numbers start at 2
     const bibStart = 2;
 
-    let nums = ['16', '18', '24', '38'];
+    let nums = ['16', '24'];
 
     for (let i = bibStart; i < numberOfMushers + bibStart; i++) {
         let groupedByBib = idit_data.filter(d => d.Number == i)
             if (groupedByBib.length === 17) {
 
-              if (nums.includes(groupedByBib[0].Number)) {
+            //   if (nums.includes(groupedByBib[0].Number)) {
                 data.push(groupedByBib); 
-            }
+            // }
         }
         
     }
@@ -175,10 +175,17 @@ function sortByCheckpoint(musherData) {
  * which translates to the dot traveling slower over the trail.
  */
 
+function sumArr(arr) {
+    return arr.reduce((a,b) => a+b);
+}
+
 function getTrailPaths(route, data) {
     const checkpointTimes = getDataPoint(data, 'Time');
+    console.log('checkpointTimes', checkpointTimes); // (camden)
     const checkpointSpeeds = getDataPoint(data, 'Speed');
+    console.log('checkpointSpeeds', checkpointSpeeds); // (camden)
     const checkpointLayovers = getDataPoint(data, 'Elapsed Time');
+    console.log('checkpointLayovers', checkpointLayovers); // (camden)
     const numberOfMushers = data.length;
     const originLong = checkpointCoordinates[0][0];
     const originLat = checkpointCoordinates[0][1];
@@ -191,10 +198,11 @@ function getTrailPaths(route, data) {
 
     let trails = [];
     for (let i = 0; i < numberOfMushers; i++) {
+        let normalized = normalize(checkpointLayovers[i]);
         let trail = [];
         for (let j = 0; j < route.features.length; j++) {
-            const simSpeed = 0.5;
-            const layoverSimSpeed = 0.1;
+            const simSpeed = 0.04;
+            const layoverSimSpeed = 0.04;
             let step = 0;
             let progress = 0;
 
@@ -208,7 +216,7 @@ function getTrailPaths(route, data) {
              * turf.js based on performance.now()
             */
             let distanceToCheckpoint = 0;
-            while (distanceToCheckpoint < distanceBetweenCheckpoints[j]) {
+            while (distanceToCheckpoint <= distanceBetweenCheckpoints[j]) {
                 const now = step * checkpointSpeeds[i][j];
                 progress = lerp(now, 0, checkpointTimes[i][j]);
 
@@ -218,22 +226,30 @@ function getTrailPaths(route, data) {
                     progress * distanceBetweenCheckpoints[j]
                 );
 
-                //TODO: (camden) test trail lengths of top 3
                 trail.push(segment);
                 step += simSpeed;
                 distanceToCheckpoint = progress * distanceBetweenCheckpoints[j];
             }
 
-            step = 0.01; // reset step
-            while (step < checkpointLayovers[i][j]) {
+            // longer layover should mean more segments
+            step = 0; // reset step
+            let timeTilDeparture = 0;
+            while (timeTilDeparture < checkpointTimes[i][j]) {
+                const now = step * ((1-normalized[j])+5); 
+                progress = lerp(now, 0, checkpointLayovers[i][j]); 
+
                 let segment = ruler.along(
                     route.features[j].geometry.coordinates,
                     distanceBetweenCheckpoints[j]
                 );
                 trail.push(segment);
                 step += layoverSimSpeed;
+                timeTilDeparture = progress * checkpointTimes[i][j]; 
+                // console.log('step', step); // (camden)
             }
         }
+
+        console.log('trail.length', trail.length); // (camden)
         trails.push(trail);
     }
     return trails;

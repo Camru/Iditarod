@@ -1,8 +1,8 @@
 import {musherResults} from './assets/Iditarod_2017';
 import {route, trails, musherPoints} from './store';
+import Settings from './settings';
 import Config from '../config';
 mapboxgl.accessToken = Config.API_KEY;
-console.log('musherPoints', musherPoints); // (camden)
 
 const map = new mapboxgl.Map({
     container: 'map',
@@ -24,8 +24,8 @@ map.on('load', function() {
         source: 'route',
         type: 'line',
         paint: {
-            'line-width': 2,
-            'line-color': '#007cbf'
+            'line-width': Settings.trailWidth,
+            'line-color': Settings.trailColor
         }
     });
 
@@ -39,12 +39,12 @@ map.on('load', function() {
         source: 'point',
         type: 'circle',
         paint: {
-            'circle-radius': 10,
+            'circle-radius': Settings.musherRadius,
             'circle-color': {
                 property: 'myColor',
                 type: 'categorical',
                 stops: [['24', '#e74c3c']],
-                default: '#F0F'
+                default: Settings.musherColor 
             }
         }
     });
@@ -70,8 +70,8 @@ map.on('load', function() {
             'visibility': 'none'
         },
         paint: {
-            'circle-radius': 10,
-            'circle-color': '#FFFFFF'
+            'circle-radius': Settings.musherRadius,
+            'circle-color': Settings.highlightPointColor 
         }
     });
 });

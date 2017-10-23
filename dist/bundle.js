@@ -60,33 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__map__ = __webpack_require__(6);
-
-// import dom from './dom';
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-    API_KEY: 'pk.eyJ1IjoidGhlY2FtZGVuIiwiYSI6Ikw0RDFKbjAifQ.6YLg6ozUZYD0FEiKv46LGA'
-});
-
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1525,7 +1503,502 @@ const idit_data = [
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__map__ = __webpack_require__(2);
+
+// import dom from './dom';
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__settings__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__config__ = __webpack_require__(6);
+
+
+
+
+mapboxgl.accessToken = __WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].API_KEY;
+
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v9',
+    center: [-157.0, 64.2008],
+    zoom: 5,
+    pitch: 40,
+    bearing: 40
+});
+
+map.on('load', function() {
+    map.addSource('route', {
+        type: 'geojson',
+        data: __WEBPACK_IMPORTED_MODULE_1__store__["b" /* route */]
+    });
+
+    map.addLayer({
+        id: 'route',
+        source: 'route',
+        type: 'line',
+        paint: {
+            'line-width': __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].trailWidth,
+            'line-color': __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].trailColor
+        }
+    });
+
+    map.addSource('point', {
+        type: 'geojson',
+        data: __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]
+    });
+
+    map.addLayer({
+        id: 'point',
+        source: 'point',
+        type: 'circle',
+        paint: {
+            'circle-radius': __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].musherRadius,
+            'circle-color': {
+                property: 'myColor',
+                type: 'categorical',
+                stops: [['24', '#e74c3c']],
+                default: __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].musherColor 
+            }
+        }
+    });
+
+    map.addSource('highlightPoint', {
+        type: 'geojson',
+        data: {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-157.0, 64.2008] 
+                }}]
+            } 
+    });
+
+    map.addLayer({
+        id: 'highlight',
+        source: 'highlightPoint',
+        type: 'circle',
+        'layout': {
+            'visibility': 'none'
+        },
+        paint: {
+            'circle-radius': __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].musherRadius,
+            'circle-color': __WEBPACK_IMPORTED_MODULE_2__settings__["a" /* default */].highlightPointColor 
+        }
+    });
+});
+
+function highlightMusherPoint (coords) {
+    let updatedData = {
+        "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": coords 
+            }}]
+        } 
+
+    // let visibility = map.getLayoutProperty('highlight', 'visibility');
+    map.setLayoutProperty('highlight', 'visibility', 'visible');
+    map.getSource('highlightPoint').setData(updatedData); 
+}
+
+
+createMusherListElement(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["c" /* musherResults */]);
+let hoveringOn = null;
+function createMusherListElement (results) {
+    const list = document.getElementById('name-list');
+    const listItemClass = 'list-item';
+    for (let i = 0; i < results.length; i++) {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = results[i].name;
+        listItem.className = listItemClass;
+        list.appendChild(listItem);
+    }
+
+    list.addEventListener('mouseover', function (e) {
+        if (e.target.className === listItemClass) {
+            const {childNodes} = list;
+            childNodes.forEach(child => child.id = "");
+            hoveringOn = e.target.innerHTML;
+            e.target.id = 'list-item-highlighted';
+        };
+    }, false);
+}
+
+let counter = 0;
+let raf;
+function play() {
+    // Update point geometry to a new position based on counter denoting
+    // the index to access the arc.
+
+    // if (counter === null) return;
+    for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.length; i++) {
+        if (__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.name === hoveringOn) {
+            let currentPos = __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter]; // (camden)
+            highlightMusherPoint(currentPos);
+        }
+        if (counter < __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i].length) {
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].geometry.coordinates =
+                __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter];
+        } else {
+            console.log('bib', __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.myColor);
+            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.splice(i, 1);
+            __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */].splice(i, 1);
+            // i = 0;
+        }
+    }
+    // map.on('mouseenter', 'point', function(e) {
+    //     // Change the cursor style as a UI indicator.
+    //     map.getCanvas().style.cursor = 'pointer';
+
+    //     // Populate the popup and set its coordinates
+    //     // based on the feature found.
+    //     console.log('e', e); // (camden)
+
+    //     map.addSource(e.lngLat.lng, {
+    //         type: 'geojson',
+    //         data: {
+    //             "type": "FeatureCollection",
+    //             "features": [{
+    //                 "type": "Feature",
+    //                 "geometry": {
+    //                     "type": "Point",
+    //                     "coordinates": [e.lngLat.lng, e.lngLat.lat] 
+    //                 }}]
+    //             }
+    //     }); 
+
+    //     map.addLayer({
+    //         id: e.lngLat.ln,
+    //         source: 'test1',
+    //         type: 'circle',
+    //         paint: {
+    //             'circle-radius': 10,
+    //             'circle-color': '#FFFF00'
+               
+    //         }
+    //     });
+    // });
+
+    // Update the source with this new data.
+    map.getSource('point').setData(__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]);
+
+    // // Request the next frame of animation so long as destination has not
+    // // been reached.
+    // if (point.features[0].geometry.coordinates[0] !== destination[0]) {
+    //     requestAnimationFrame(play);
+    // }
+
+    raf = requestAnimationFrame(play);
+
+    counter = counter + 1;
+}
+
+function reset() {
+    counter = 0;
+}
+
+function stop() {
+    cancelAnimationFrame(raf);
+}
+
+const playBtn = document.getElementById('play-btn');
+const stopBtn = document.getElementById('stop-btn');
+const resetBtn = document.getElementById('reset-btn');
+playBtn.addEventListener('click', play);
+stopBtn.addEventListener('click', stop);
+resetBtn.addEventListener('click', reset);
+
+/* unused harmony default export */ var _unused_webpack_default_export = (map);
+
+
+/***/ }),
 /* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return route; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return trails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return musherPoints; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_cheap_ruler__);
+
+
+
+
+const data = getMusherData(74);
+const sortedByCheckpoint = sortByCheckpoint(data);
+console.log('sortedByCheckpoint', sortedByCheckpoint); // (camden)
+const musherPoints = createMusherPoints(sortedByCheckpoint); 
+
+const checkpointPairs = getCheckpointPairs(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */]);
+const checkpointFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
+console.log('checkpointFeatures', checkpointFeatures); // (camden)
+let route = {
+    "type": "FeatureCollection",
+    "features": checkpointFeatures 
+};
+
+const trails = getTrailPaths(route, sortedByCheckpoint);
+
+console.log('route.features', route.features);
+console.log('trails', trails); // (camden)
+// Update the route with the calculated race trajectory of each musher 
+// let full = createFeature([0, 0], [0, 0]);
+// route.features.push(full);
+// route.features[16].geometry.coordinates = trails;
+// route.features[1].geometry.coordinates = [
+//     [0, 0],
+//     [0, 0]
+// ];
+// route.features[2].geometry.coordinates = [
+//     [0, 0],
+//     [0, 0]
+// ];
+
+// console.log('route.features after', route.features); // (camden)
+
+
+// const checkpointTimes = getDataPointWithName(sortedByCheckpoint, 'Time');
+// let sorted = checkpointTimes.sort((a, b) => {
+
+//     return a.sumTime - b.sumTime;
+// });
+// console.log('sorted', sorted); // (camden)
+// function getDataPointWithName (mushers, key) {
+//     return mushers.map(musher => {
+//         let obj = {};
+//         let test = musher.map(d => {
+//             return +d['Time'] + (+d['Elapsed Time']);
+//         });
+//         let updated = test.slice(1);
+
+//         obj['name'] = musher[0].Name;
+//         obj['sumTime'] = updated.reduce((a,b) => a+b);
+
+//         // we don't need the first data point, which is the start of the race
+//         return  obj;
+//     });
+// }
+
+function getDataPoint (mushers, key) {
+    return mushers.map(musher => {
+        const output = musher.map(d => {
+            return +d[key];
+        });
+
+        // we don't need the first data point, which is the start of the race
+        return output.slice(1);
+    });
+}
+
+function getCheckpointPairs (coords) {
+    let pairs = [];
+    for (var i=0 ; i < coords.length ; i++) {
+        if (coords[i+1] !== undefined) {
+            pairs.push ([coords[i], coords[i+1]]);
+        } 
+    }
+
+    return pairs;
+} 
+
+function createFeature (long, lat) {
+    return {
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [long, lat]
+        }
+    } 
+}
+
+function createMusherPoints (mushers) {
+    // lat and long of the start of the race
+   const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
+   const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1]; 
+
+   const features = mushers.map(musher => {
+        return {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [originLong, originLat]
+            },
+            "properties": {
+                "title": musher[0].Number,
+                "myColor": musher[0].Number,
+                "name": musher[0].Name
+            }
+        }
+    });
+
+    return {
+        "type": "FeatureCollection",
+        "features": features
+    };
+}
+
+function getMusherData(numberOfMushers) {
+    let data = [];
+
+    // musher bib numbers start at 2
+    const bibStart = 2;
+
+    let nums = ['16', '24'];
+
+    for (let i = bibStart; i < numberOfMushers + bibStart; i++) {
+        let groupedByBib = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["b" /* idit_data */].filter(d => d.Number == i)
+            if (groupedByBib.length === 17) {
+
+            //   if (nums.includes(groupedByBib[0].Number)) {
+                data.push(groupedByBib); 
+            // }
+        }
+        
+    }
+
+    return data;
+}
+
+function sortByCheckpoint(musherData) {
+    const checkpoints = { 
+        'Fairbanks': 0,
+        'Nenana': 1,
+        'Manley': 2,
+        'Tanana': 3,
+        'Ruby': 4,
+        'Galena': 5,
+        'Huslia': 6,
+        'Koyukuk': 7,
+        'Nulato': 8,
+        'Kaltag': 9,
+        'Unalakleet': 10,
+        'Shaktoolik': 11,
+        'Koyuk': 12,
+        'Elim': 13,
+        'White Mountain': 14,
+        'Safety': 15,
+        'Nome': 16
+    };
+
+    let sorted = [];
+    return musherData.map(d => {
+        return sorted[checkpoints[d.Checkpoint]] = d
+    });
+    
+}
+
+/**
+ * In order to simulate the speed each musher travels the trail, we need to 
+ * break up the entire trail into segments which represent the paths between
+ * each checkpoint in the race. Then those segments are calculated for each 
+ * musher, taking into account their speed and the time they spent on layover 
+ * at each checkpoint. Each segment is essentially divided up like a ruler is by
+ * inches. The slower the musher, the more slices there are in the segment, 
+ * which translates to the dot traveling slower over the trail.
+ */
+
+function sumArr(arr) {
+    return arr.reduce((a,b) => a+b);
+}
+
+function getTrailPaths(route, data) {
+    const checkpointTimes = getDataPoint(data, 'Time');
+    console.log('checkpointTimes', checkpointTimes); // (camden)
+    const checkpointSpeeds = getDataPoint(data, 'Speed');
+    console.log('checkpointSpeeds', checkpointSpeeds); // (camden)
+    const checkpointLayovers = getDataPoint(data, 'Elapsed Time');
+    console.log('checkpointLayovers', checkpointLayovers); // (camden)
+    const numberOfMushers = data.length;
+    const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
+    const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1];
+
+    // this calculates the geodesic distance between checkpoints since we 
+    // are drawing straight paths between checkpoints instead of the true path 
+    // that a musher would use. So we don't use their provided distance traveled
+    const ruler = __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default()(64.5, 'miles');
+    const distanceBetweenCheckpoints = route.features.map(ft => ruler.lineDistance(ft.geometry.coordinates));
+
+    let trails = [];
+    for (let i = 0; i < numberOfMushers; i++) {
+        let normalized = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["b" /* normalize */])(checkpointLayovers[i]);
+        let trail = [];
+        for (let j = 0; j < route.features.length; j++) {
+            const simSpeed = 0.04;
+            const layoverSimSpeed = 0.04;
+            let step = 0;
+            let progress = 0;
+
+            /** 
+             * use linear interpolation to get position of dot along path.
+             * Since we don't have a 'now', we can use a use a step variable to 
+             * mimic elapsed time. For example, find the new position of the dot 
+             * every minute.
+             * 
+             * cheapRuler peformed segment calculation 3.6x faster than 
+             * turf.js based on performance.now()
+            */
+            let distanceToCheckpoint = 0;
+            while (distanceToCheckpoint <= distanceBetweenCheckpoints[j]) {
+                const now = step * checkpointSpeeds[i][j];
+                progress = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* lerp */])(now, 0, checkpointTimes[i][j]);
+
+                // Takes a line and returns a point at a specified distance along the line.
+                let segment = ruler.along(
+                    route.features[j].geometry.coordinates,
+                    progress * distanceBetweenCheckpoints[j]
+                );
+
+                trail.push(segment);
+                step += simSpeed;
+                distanceToCheckpoint = progress * distanceBetweenCheckpoints[j];
+            }
+
+            // longer layover should mean more segments
+            step = 0; // reset step
+            let timeTilDeparture = 0;
+            while (timeTilDeparture < checkpointTimes[i][j]) {
+                const now = step * ((1-normalized[j])+5); 
+                progress = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* lerp */])(now, 0, checkpointLayovers[i][j]); 
+
+                let segment = ruler.along(
+                    route.features[j].geometry.coordinates,
+                    distanceBetweenCheckpoints[j]
+                );
+                trail.push(segment);
+                step += layoverSimSpeed;
+                timeTilDeparture = progress * checkpointTimes[i][j]; 
+                // console.log('step', step); // (camden)
+            }
+        }
+
+        console.log('trail.length', trail.length); // (camden)
+        trails.push(trail);
+    }
+    return trails;
+}
+
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1535,7 +2008,7 @@ const normalize = arr => {
 
     return arr.map(value => (value - min) / (max - min));
 }
-/* unused harmony export normalize */
+/* harmony export (immutable) */ __webpack_exports__["b"] = normalize;
 
 
 const lerp = (now, start, end) => {
@@ -1545,7 +2018,7 @@ const lerp = (now, start, end) => {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1970,471 +2443,28 @@ function interpolate(a, b, t) {
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return route; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return trails; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return musherPoints; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_cheap_ruler__);
-
-
-
-
-const data = getMusherData(74);
-const sortedByCheckpoint = sortByCheckpoint(data);
-console.log('sortedByCheckpoint', sortedByCheckpoint); // (camden)
-const musherPoints = createMusherPoints(sortedByCheckpoint); 
-
-const checkpointPairs = getCheckpointPairs(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */]);
-const checkpointFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
-console.log('checkpointFeatures', checkpointFeatures); // (camden)
-let route = {
-    "type": "FeatureCollection",
-    "features": checkpointFeatures 
-};
-
-const trails = getTrailPaths(route, sortedByCheckpoint);
-
-console.log('route.features', route.features);
-console.log('trails', trails); // (camden)
-// Update the route with the calculated race trajectory of each musher 
-// let full = createFeature([0, 0], [0, 0]);
-// route.features.push(full);
-// route.features[16].geometry.coordinates = trails;
-// route.features[1].geometry.coordinates = [
-//     [0, 0],
-//     [0, 0]
-// ];
-// route.features[2].geometry.coordinates = [
-//     [0, 0],
-//     [0, 0]
-// ];
-
-// console.log('route.features after', route.features); // (camden)
-
-
-// const checkpointTimes = getDataPointWithName(sortedByCheckpoint, 'Time');
-// let sorted = checkpointTimes.sort((a, b) => {
-
-//     return a.sumTime - b.sumTime;
-// });
-// console.log('sorted', sorted); // (camden)
-// function getDataPointWithName (mushers, key) {
-//     return mushers.map(musher => {
-//         let obj = {};
-//         let test = musher.map(d => {
-//             return +d['Time'] + (+d['Elapsed Time']);
-//         });
-//         let updated = test.slice(1);
-
-//         obj['name'] = musher[0].Name;
-//         obj['sumTime'] = updated.reduce((a,b) => a+b);
-
-//         // we don't need the first data point, which is the start of the race
-//         return  obj;
-//     });
-// }
-
-function getDataPoint (mushers, key) {
-    return mushers.map(musher => {
-        const output = musher.map(d => {
-            return +d[key];
-        });
-
-        // we don't need the first data point, which is the start of the race
-        return output.slice(1);
-    });
-}
-
-function getCheckpointPairs (coords) {
-    let pairs = [];
-    for (var i=0 ; i < coords.length ; i++) {
-        if (coords[i+1] !== undefined) {
-            pairs.push ([coords[i], coords[i+1]]);
-        } 
-    }
-
-    return pairs;
-} 
-
-function createFeature (long, lat) {
-    return {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [long, lat]
-        }
-    } 
-}
-
-function createMusherPoints (mushers) {
-    // lat and long of the start of the race
-   const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
-   const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1]; 
-
-   const features = mushers.map(musher => {
-        return {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [originLong, originLat]
-            },
-            "properties": {
-                "title": musher[0].Number,
-                "myColor": musher[0].Number,
-                "name": musher[0].Name
-            }
-        }
-    });
-
-    return {
-        "type": "FeatureCollection",
-        "features": features
-    };
-}
-
-function getMusherData(numberOfMushers) {
-    let data = [];
-
-    // musher bib numbers start at 2
-    const bibStart = 2;
-
-    let nums = ['16', '18', '24', '38'];
-
-    for (let i = bibStart; i < numberOfMushers + bibStart; i++) {
-        let groupedByBib = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["b" /* idit_data */].filter(d => d.Number == i)
-            if (groupedByBib.length === 17) {
-
-              if (nums.includes(groupedByBib[0].Number)) {
-                data.push(groupedByBib); 
-            }
-        }
-        
-    }
-
-    return data;
-}
-
-function sortByCheckpoint(musherData) {
-    const checkpoints = { 
-        'Fairbanks': 0,
-        'Nenana': 1,
-        'Manley': 2,
-        'Tanana': 3,
-        'Ruby': 4,
-        'Galena': 5,
-        'Huslia': 6,
-        'Koyukuk': 7,
-        'Nulato': 8,
-        'Kaltag': 9,
-        'Unalakleet': 10,
-        'Shaktoolik': 11,
-        'Koyuk': 12,
-        'Elim': 13,
-        'White Mountain': 14,
-        'Safety': 15,
-        'Nome': 16
-    };
-
-    let sorted = [];
-    return musherData.map(d => {
-        return sorted[checkpoints[d.Checkpoint]] = d
-    });
-    
-}
-
-/**
- * In order to simulate the speed each musher travels the trail, we need to 
- * break up the entire trail into segments which represent the paths between
- * each checkpoint in the race. Then those segments are calculated for each 
- * musher, taking into account their speed and the time they spent on layover 
- * at each checkpoint. Each segment is essentially divided up like a ruler is by
- * inches. The slower the musher, the more slices there are in the segment, 
- * which translates to the dot traveling slower over the trail.
- */
-
-function getTrailPaths(route, data) {
-    const checkpointTimes = getDataPoint(data, 'Time');
-    const checkpointSpeeds = getDataPoint(data, 'Speed');
-    const checkpointLayovers = getDataPoint(data, 'Elapsed Time');
-    const numberOfMushers = data.length;
-    const originLong = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][0];
-    const originLat = __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["a" /* checkpointCoordinates */][0][1];
-
-    // this calculates the geodesic distance between checkpoints since we 
-    // are drawing straight paths between checkpoints instead of the true path 
-    // that a musher would use. So we don't use their provided distance traveled
-    const ruler = __WEBPACK_IMPORTED_MODULE_2_cheap_ruler___default()(64.5, 'miles');
-    const distanceBetweenCheckpoints = route.features.map(ft => ruler.lineDistance(ft.geometry.coordinates));
-
-    let trails = [];
-    for (let i = 0; i < numberOfMushers; i++) {
-        let trail = [];
-        for (let j = 0; j < route.features.length; j++) {
-            const simSpeed = 0.5;
-            const layoverSimSpeed = 0.1;
-            let step = 0;
-            let progress = 0;
-
-            /** 
-             * use linear interpolation to get position of dot along path.
-             * Since we don't have a 'now', we can use a use a step variable to 
-             * mimic elapsed time. For example, find the new position of the dot 
-             * every minute.
-             * 
-             * cheapRuler peformed segment calculation 3.6x faster than 
-             * turf.js based on performance.now()
-            */
-            let distanceToCheckpoint = 0;
-            while (distanceToCheckpoint < distanceBetweenCheckpoints[j]) {
-                const now = step * checkpointSpeeds[i][j];
-                progress = Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* lerp */])(now, 0, checkpointTimes[i][j]);
-
-                // Takes a line and returns a point at a specified distance along the line.
-                let segment = ruler.along(
-                    route.features[j].geometry.coordinates,
-                    progress * distanceBetweenCheckpoints[j]
-                );
-
-                //TODO: (camden) test trail lengths of top 3
-                trail.push(segment);
-                step += simSpeed;
-                distanceToCheckpoint = progress * distanceBetweenCheckpoints[j];
-            }
-
-            step = 0.01; // reset step
-            while (step < checkpointLayovers[i][j]) {
-                let segment = ruler.along(
-                    route.features[j].geometry.coordinates,
-                    distanceBetweenCheckpoints[j]
-                );
-                trail.push(segment);
-                step += layoverSimSpeed;
-            }
-        }
-        trails.push(trail);
-    }
-    return trails;
-}
-
-
-
-/***/ }),
 /* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(1);
-
-
-
-mapboxgl.accessToken = __WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */].API_KEY;
-console.log('musherPoints', __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]); // (camden)
-
-const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v9',
-    center: [-157.0, 64.2008],
-    zoom: 5,
-    pitch: 40,
-    bearing: 40
+/* harmony default export */ __webpack_exports__["a"] = ({
+    API_KEY: 'pk.eyJ1IjoidGhlY2FtZGVuIiwiYSI6Ikw0RDFKbjAifQ.6YLg6ozUZYD0FEiKv46LGA'
 });
 
-map.on('load', function() {
-    map.addSource('route', {
-        type: 'geojson',
-        data: __WEBPACK_IMPORTED_MODULE_1__store__["b" /* route */]
-    });
 
-    map.addLayer({
-        id: 'route',
-        source: 'route',
-        type: 'line',
-        paint: {
-            'line-width': 2,
-            'line-color': '#007cbf'
-        }
-    });
 
-    map.addSource('point', {
-        type: 'geojson',
-        data: __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]
-    });
+/***/ }),
+/* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-    map.addLayer({
-        id: 'point',
-        source: 'point',
-        type: 'circle',
-        paint: {
-            'circle-radius': 10,
-            'circle-color': {
-                property: 'myColor',
-                type: 'categorical',
-                stops: [['24', '#e74c3c']],
-                default: '#F0F'
-            }
-        }
-    });
-
-    map.addSource('highlightPoint', {
-        type: 'geojson',
-        data: {
-            "type": "FeatureCollection",
-            "features": [{
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [-157.0, 64.2008] 
-                }}]
-            } 
-    });
-
-    map.addLayer({
-        id: 'highlight',
-        source: 'highlightPoint',
-        type: 'circle',
-        'layout': {
-            'visibility': 'none'
-        },
-        paint: {
-            'circle-radius': 10,
-            'circle-color': '#FFFFFF'
-        }
-    });
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    trailColor: '#007cbf',
+    trailWidth: 2,
+    musherColor: '#F0F',
+    musherRadius: 10,
+    highlightPointColor: '#FFFF00',
 });
-
-function highlightMusherPoint (coords) {
-    let updatedData = {
-        "type": "FeatureCollection",
-        "features": [{
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": coords 
-            }}]
-        } 
-
-    // let visibility = map.getLayoutProperty('highlight', 'visibility');
-    map.setLayoutProperty('highlight', 'visibility', 'visible');
-    map.getSource('highlightPoint').setData(updatedData); 
-}
-
-
-createMusherListElement(__WEBPACK_IMPORTED_MODULE_0__assets_Iditarod_2017__["c" /* musherResults */]);
-let hoveringOn = null;
-function createMusherListElement (results) {
-    const list = document.getElementById('name-list');
-    const listItemClass = 'list-item';
-    for (let i = 0; i < results.length; i++) {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = results[i].name;
-        listItem.className = listItemClass;
-        list.appendChild(listItem);
-    }
-
-    list.addEventListener('mouseover', function (e) {
-        if (e.target.className === listItemClass) {
-            const {childNodes} = list;
-            childNodes.forEach(child => child.id = "");
-            hoveringOn = e.target.innerHTML;
-            e.target.id = 'list-item-highlighted';
-        };
-    }, false);
-}
-
-let counter = 0;
-let raf;
-function play() {
-    // Update point geometry to a new position based on counter denoting
-    // the index to access the arc.
-
-    // if (counter === null) return;
-    for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.length; i++) {
-        if (__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.name === hoveringOn) {
-            let currentPos = __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter]; // (camden)
-            highlightMusherPoint(currentPos);
-        }
-        if (counter < __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i].length) {
-            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].geometry.coordinates =
-                __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */][i][counter];
-        } else {
-            console.log('bib', __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features[i].properties.myColor);
-            __WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */].features.splice(i, 1);
-            __WEBPACK_IMPORTED_MODULE_1__store__["c" /* trails */].splice(i, 1);
-            // i = 0;
-        }
-    }
-    // map.on('mouseenter', 'point', function(e) {
-    //     // Change the cursor style as a UI indicator.
-    //     map.getCanvas().style.cursor = 'pointer';
-
-    //     // Populate the popup and set its coordinates
-    //     // based on the feature found.
-    //     console.log('e', e); // (camden)
-
-    //     map.addSource(e.lngLat.lng, {
-    //         type: 'geojson',
-    //         data: {
-    //             "type": "FeatureCollection",
-    //             "features": [{
-    //                 "type": "Feature",
-    //                 "geometry": {
-    //                     "type": "Point",
-    //                     "coordinates": [e.lngLat.lng, e.lngLat.lat] 
-    //                 }}]
-    //             }
-    //     }); 
-
-    //     map.addLayer({
-    //         id: e.lngLat.ln,
-    //         source: 'test1',
-    //         type: 'circle',
-    //         paint: {
-    //             'circle-radius': 10,
-    //             'circle-color': '#FFFF00'
-               
-    //         }
-    //     });
-    // });
-
-    // Update the source with this new data.
-    map.getSource('point').setData(__WEBPACK_IMPORTED_MODULE_1__store__["a" /* musherPoints */]);
-
-    // // Request the next frame of animation so long as destination has not
-    // // been reached.
-    // if (point.features[0].geometry.coordinates[0] !== destination[0]) {
-    //     requestAnimationFrame(play);
-    // }
-
-    raf = requestAnimationFrame(play);
-
-    counter = counter + 1;
-}
-
-function reset() {
-    counter = 0;
-}
-
-function stop() {
-    cancelAnimationFrame(raf);
-}
-
-const playBtn = document.getElementById('play-btn');
-const stopBtn = document.getElementById('stop-btn');
-const resetBtn = document.getElementById('reset-btn');
-playBtn.addEventListener('click', play);
-stopBtn.addEventListener('click', stop);
-resetBtn.addEventListener('click', reset);
-
-/* unused harmony default export */ var _unused_webpack_default_export = (map);
-
 
 /***/ })
 /******/ ]);
