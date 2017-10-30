@@ -1,2 +1,2 @@
 import map from './map';
-// import dom from './dom';
+import dom from './dom';

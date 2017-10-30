@@ -1,27 +1,237 @@
 html {
-    background-color: #23384a;
+    background-color: #191a1a;
     color: white;
     font-family: 'Lato';
+    box-sizing: border-box;
 }
 
 body {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.header {
+    position: absolute;
     display: flex;
+    justify-content: space-around;
+    color: white;
+    z-index: 1000;
+    width: 260px;
+    margin-top: 11px;
 }
 
-.map-container {
-    flex-grow: 1;
+.header h1 {
+    margin: 0px;
 }
 
-.name-container {
-    width: 200px;
+#about-btn {
+    z-index: 2000;
+    background: transparent;
+    color: #4dbbff;
+    font-size: 19px;
+    border: none;
     cursor: pointer;
 }
 
+#about-btn:hover {
+    color: #ffffff; 
+}
+#about-btn:focus {
+    outline: none;
+}
+
+#about-container {
+    position: absolute;
+    top: 0;
+    z-index: 100;
+    left: 0px;
+    font-size: 16px;
+    height: 496px;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding-top: 50px;
+    line-height: 29px;
+}
+
+.about {
+    width: 260px;
+    padding: 15px;
+    display: none;
+}
+
+.about a {
+    text-decoration: none;
+    color: #4dbbff;
+}
+
+.about a:hover {
+    color: #ffffff;
+}
+
+.controls-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.control-btn {
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    width: 53px;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 3px;
+    color: white;
+}
+
+.control-btn:hover {
+    background-color: rgba(37, 130, 195, 0.28);
+}
+.control-btn:focus {
+    outline: none;
+    background-color: rgba(0, 121, 208, 0.79);
+}
+
+#name-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.85);
+    height: 562px;
+    overflow-y: auto;
+}
+
+.name-header {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.name-header h1 {
+    font-size: 25px;
+    margin: 9px;
+}
+
+.name-header p {
+    margin-top: 0;
+    margin-left: 10px;
+}
+
+#menu-btn {
+    outline: none;
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 19px;
+    position: absolute;
+    top: 11px;
+    right: 23px;
+    z-index: 2000;
+    cursor: pointer;
+}
+
+#menu-btn:hover {
+   color: rgba(37, 130, 195, 0.28); 
+}
+
+#name-list {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.list-item {
+    padding: 10px;
+    letter-spacing: 1px;
+    background-color: #1f1f1f;
+    margin-bottom: 1px;
+}
+
 .list-item:hover {
-    
-    color: #FFFF00;
+    background-color: rgba(37, 130, 195, 0.28);
 }
 
 #list-item-highlighted {
-    color: rgb(25, 0, 255);
+    background-color: #d27e00; 
+}
+
+/* animations */
+
+/* names menu */
+@keyframes open-menu { 
+    from {width: 0px; display: none;}
+    to {width: 260px; display: block;}
+}
+
+@keyframes close-menu {
+    from {width: 260px; display: block;}
+    to {width: 0px; display: none;}
+}
+
+@keyframes show-names {
+    from { opacity: 0; }
+    to { opacity: 1;}
+}
+
+/* about section */
+@keyframes open-about { 
+    from {width: 0px; display: none;}
+    to {width: 288px; display: block;}
+}
+
+@keyframes close-about {
+    from {width: 288px; display: block;}
+    to {width: 0px; display: none;}
+}
+
+@keyframes show-about-text {
+    from { opacity: 0; }
+    to { opacity: 1;}
+}
+
+.menu-open {
+    width: 260px;
+    
+    animation-name: open-menu; 
+    animation-duration: 0.3s;
+}
+
+.menu-open .about {
+    display: block;
+    width: 228px;
+}
+
+.menu-open ul, .menu-open .about, .menu-open .name-header {
+    animation-name: show-names;
+    animation-duration: 1.0s;
+}
+
+.menu-closed {
+    animation-name: close-menu; 
+    animation-duration: 0.3s; 
+}
+
+.menu-closed ul {
+    display: none;
+}
+
+.menu-closed .about {
+    display: none;
+}
+
+.menu-closed .name-header {
+    display: none;
 }

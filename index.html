@@ -11,35 +11,62 @@
 
 		<!-- fonts -->
 		<link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	</head>
 	<body>
-		<div class="map-container">
-			<div id="map" style="width:100%; height:100%;"></div>
-			<div class="controls">
-				<button id="play-btn">play</button> 
-				<button id="stop-btn">stop</button> 
-				<button id="reset-btn">reset</button>
+
+		<div class="header">
+			<h1>Iditarod 2017</h1>
+			<button id="about-btn"><i class="fa fa-question-circle"></i></button>
+		</div>
+
+		<div id="about-container">
+			<div class="about">
+				<p>
+					This visualization shows the flurry of mushers trekking along the Iditarod 
+					Trail during 2017's <a href="http://iditarod.com/about/">Last Great Race on Earth</a>.
+				</p>
+				<p>
+					Each dot represents a musher whose pace is calculated based on their real-life 
+					speed, including the duration they stopped at each checkpoint to rest. 
+					You can click on a name in the musher's list to highlight their dot.
+				</p>
+				<p>
+					The dataset was found on <a href="https://www.kaggle.com/iditarod/iditarod-race">Kaggle</a>
+				</p>
+				<p>
+					The map was built with <a href="https://www.mapbox.com/mapbox-gl-js/api/">Mapbox</a>
+				</p>
 			</div>
 		</div>
-		<div class="name-container">
-			<ol id="name-list"></ol>
+
+		<div class="map-container">
+			<div id="map" style="width:100%; height:100vh;"></div>
+		</div>
+
+		<button id="menu-btn"><i class="fa fa-bars" ></i></button>
+
+		<div id="name-container" class="menu-open">
+			<div class="name-header">
+				<h1>Mushers</h1>
+				<p>(Click to Highlight)</p>
+			</div>
+			<ul id="name-list"></ul>
+		</div>
+
+		<div class="controls-container">
+			<div class="controls">
+				<button class="control-btn" id="play-btn"><i class="fa fa-play"></i></button> 
+				<button class="control-btn" id="pause-btn"><i class="fa fa-pause"></i></button> 
+				<button class="control-btn" id="reset-btn"><i class="fa fa-refresh"></i></button>
+			</div>
 		</div>
 		
 		<!-- Third-party libraries -->
 		<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
 		<script src='https://api.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.js'></script>
 
-		<!-- utils -->
-
-		<!-- assets -->
-
 		<!-- root -->
 		<script src="./dist/bundle.js" type="text/javascript"></script>
-
-		<script type="text/javascript">
-			// window.onload = () => { 
-			//   main.render();
-			// };
-		  </script>
 	</body>
 </html>

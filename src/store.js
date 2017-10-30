@@ -1,63 +1,23 @@
 import {idit_data, checkpointCoordinates} from './assets/Iditarod_2017';
-import {lerp, normalize} from './utils'
-import cheapRuler from 'cheap-ruler'
+import Settings from './settings';
+import {lerp, normalize} from './utils';
+import cheapRuler from 'cheap-ruler';
 
 const data = getMusherData(74);
 const sortedByCheckpoint = sortByCheckpoint(data);
-console.log('sortedByCheckpoint', sortedByCheckpoint); // (camden)
-const musherPoints = createMusherPoints(sortedByCheckpoint); 
+const musherPoints = createMusherPoints(sortedByCheckpoint);
 
 const checkpointPairs = getCheckpointPairs(checkpointCoordinates);
 const checkpointFeatures = checkpointPairs.map(cp => createFeature(cp[0], cp[1]));
-console.log('checkpointFeatures', checkpointFeatures); // (camden)
+
 let route = {
-    "type": "FeatureCollection",
-    "features": checkpointFeatures 
+    type: 'FeatureCollection',
+    features: checkpointFeatures
 };
 
 const trails = getTrailPaths(route, sortedByCheckpoint);
 
-console.log('route.features', route.features);
-console.log('trails', trails); // (camden)
-// Update the route with the calculated race trajectory of each musher 
-// let full = createFeature([0, 0], [0, 0]);
-// route.features.push(full);
-// route.features[16].geometry.coordinates = trails;
-// route.features[1].geometry.coordinates = [
-//     [0, 0],
-//     [0, 0]
-// ];
-// route.features[2].geometry.coordinates = [
-//     [0, 0],
-//     [0, 0]
-// ];
-
-// console.log('route.features after', route.features); // (camden)
-
-
-// const checkpointTimes = getDataPointWithName(sortedByCheckpoint, 'Time');
-// let sorted = checkpointTimes.sort((a, b) => {
-
-//     return a.sumTime - b.sumTime;
-// });
-// console.log('sorted', sorted); // (camden)
-// function getDataPointWithName (mushers, key) {
-//     return mushers.map(musher => {
-//         let obj = {};
-//         let test = musher.map(d => {
-//             return +d['Time'] + (+d['Elapsed Time']);
-//         });
-//         let updated = test.slice(1);
-
-//         obj['name'] = musher[0].Name;
-//         obj['sumTime'] = updated.reduce((a,b) => a+b);
-
-//         // we don't need the first data point, which is the start of the race
-//         return  obj;
-//     });
-// }
-
-function getDataPoint (mushers, key) {
+function getDataPoint(mushers, key) {
     return mushers.map(musher => {
         const output = musher.map(d => {
             return +d[key];
@@ -68,50 +28,50 @@ function getDataPoint (mushers, key) {
     });
 }
 
-function getCheckpointPairs (coords) {
+function getCheckpointPairs(coords) {
     let pairs = [];
-    for (var i=0 ; i < coords.length ; i++) {
-        if (coords[i+1] !== undefined) {
-            pairs.push ([coords[i], coords[i+1]]);
-        } 
+    for (var i = 0; i < coords.length; i++) {
+        if (coords[i + 1] !== undefined) {
+            pairs.push([coords[i], coords[i + 1]]);
+        }
     }
 
     return pairs;
-} 
-
-function createFeature (long, lat) {
-    return {
-        "type": "Feature",
-        "geometry": {
-            "type": "LineString",
-            "coordinates": [long, lat]
-        }
-    } 
 }
 
-function createMusherPoints (mushers) {
-    // lat and long of the start of the race
-   const originLong = checkpointCoordinates[0][0];
-   const originLat = checkpointCoordinates[0][1]; 
-
-   const features = mushers.map(musher => {
-        return {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [originLong, originLat]
-            },
-            "properties": {
-                "title": musher[0].Number,
-                "myColor": musher[0].Number,
-                "name": musher[0].Name
-            }
+function createFeature(long, lat) {
+    return {
+        type: 'Feature',
+        geometry: {
+            type: 'LineString',
+            coordinates: [long, lat]
         }
+    };
+}
+
+function createMusherPoints(mushers) {
+    // lat and long of the start of the race
+    const originLong = checkpointCoordinates[0][0];
+    const originLat = checkpointCoordinates[0][1];
+
+    const features = mushers.map(musher => {
+        return {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [originLong, originLat]
+            },
+            properties: {
+                title: musher[0].Number,
+                myColor: musher[0].Number,
+                name: musher[0].Name
+            }
+        };
     });
 
     return {
-        "type": "FeatureCollection",
-        "features": features
+        type: 'FeatureCollection',
+        features: features
     };
 }
 
@@ -121,48 +81,43 @@ function getMusherData(numberOfMushers) {
     // musher bib numbers start at 2
     const bibStart = 2;
 
-    let nums = ['16', '24'];
-
     for (let i = bibStart; i < numberOfMushers + bibStart; i++) {
-        let groupedByBib = idit_data.filter(d => d.Number == i)
-            if (groupedByBib.length === 17) {
+        let groupedByBib = idit_data.filter(d => d.Number == i);
 
-            //   if (nums.includes(groupedByBib[0].Number)) {
-                data.push(groupedByBib); 
-            // }
+        // get only the mushers who finished all 17 checkpoints
+        if (groupedByBib.length === 17) {
+            data.push(groupedByBib);
         }
-        
     }
 
     return data;
 }
 
 function sortByCheckpoint(musherData) {
-    const checkpoints = { 
-        'Fairbanks': 0,
-        'Nenana': 1,
-        'Manley': 2,
-        'Tanana': 3,
-        'Ruby': 4,
-        'Galena': 5,
-        'Huslia': 6,
-        'Koyukuk': 7,
-        'Nulato': 8,
-        'Kaltag': 9,
-        'Unalakleet': 10,
-        'Shaktoolik': 11,
-        'Koyuk': 12,
-        'Elim': 13,
+    const checkpoints = {
+        Fairbanks: 0,
+        Nenana: 1,
+        Manley: 2,
+        Tanana: 3,
+        Ruby: 4,
+        Galena: 5,
+        Huslia: 6,
+        Koyukuk: 7,
+        Nulato: 8,
+        Kaltag: 9,
+        Unalakleet: 10,
+        Shaktoolik: 11,
+        Koyuk: 12,
+        Elim: 13,
         'White Mountain': 14,
-        'Safety': 15,
-        'Nome': 16
+        Safety: 15,
+        Nome: 16
     };
 
     let sorted = [];
     return musherData.map(d => {
-        return sorted[checkpoints[d.Checkpoint]] = d
+        return (sorted[checkpoints[d.Checkpoint]] = d);
     });
-    
 }
 
 /**
@@ -176,33 +131,31 @@ function sortByCheckpoint(musherData) {
  */
 
 function sumArr(arr) {
-    return arr.reduce((a,b) => a+b);
+    return arr.reduce((a, b) => a + b);
 }
 
 function getTrailPaths(route, data) {
     const checkpointTimes = getDataPoint(data, 'Time');
-    console.log('checkpointTimes', checkpointTimes); // (camden)
     const checkpointSpeeds = getDataPoint(data, 'Speed');
-    console.log('checkpointSpeeds', checkpointSpeeds); // (camden)
     const checkpointLayovers = getDataPoint(data, 'Elapsed Time');
-    console.log('checkpointLayovers', checkpointLayovers); // (camden)
     const numberOfMushers = data.length;
     const originLong = checkpointCoordinates[0][0];
     const originLat = checkpointCoordinates[0][1];
 
-    // this calculates the geodesic distance between checkpoints since we 
-    // are drawing straight paths between checkpoints instead of the true path 
+    // this calculates the geodesic distance between checkpoints since we
+    // are drawing straight paths between checkpoints instead of the true path
     // that a musher would use. So we don't use their provided distance traveled
     const ruler = cheapRuler(64.5, 'miles');
-    const distanceBetweenCheckpoints = route.features.map(ft => ruler.lineDistance(ft.geometry.coordinates));
+    const distanceBetweenCheckpoints = route.features.map(ft =>
+        ruler.lineDistance(ft.geometry.coordinates)
+    );
 
     let trails = [];
     for (let i = 0; i < numberOfMushers; i++) {
         let normalized = normalize(checkpointLayovers[i]);
         let trail = [];
         for (let j = 0; j < route.features.length; j++) {
-            const simSpeed = 0.04;
-            const layoverSimSpeed = 0.04;
+            const simSpeed = Settings.simSpeed;
             let step = 0;
             let progress = 0;
 
@@ -231,25 +184,22 @@ function getTrailPaths(route, data) {
                 distanceToCheckpoint = progress * distanceBetweenCheckpoints[j];
             }
 
-            // longer layover should mean more segments
-            step = 0; // reset step
+            step = 0;
             let timeTilDeparture = 0;
             while (timeTilDeparture < checkpointTimes[i][j]) {
-                const now = step * ((1-normalized[j])+5); 
-                progress = lerp(now, 0, checkpointLayovers[i][j]); 
+                const now = step * (1 - normalized[j] + 5);
+                progress = lerp(now, 0, checkpointLayovers[i][j]);
 
                 let segment = ruler.along(
                     route.features[j].geometry.coordinates,
                     distanceBetweenCheckpoints[j]
                 );
                 trail.push(segment);
-                step += layoverSimSpeed;
-                timeTilDeparture = progress * checkpointTimes[i][j]; 
-                // console.log('step', step); // (camden)
+                step += simSpeed;
+                timeTilDeparture = progress * checkpointTimes[i][j];
             }
         }
 
-        console.log('trail.length', trail.length); // (camden)
         trails.push(trail);
     }
     return trails;
