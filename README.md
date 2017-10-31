@@ -5,7 +5,7 @@ Each dot represents a musher whose pace is calculated based on their real-life s
 
 The dataset was found on [Kaggle](https://www.kaggle.com/iditarod/iditarod-race).
 
-The map was built with [Mapbox GL] (https://www.mapbox.com/mapbox-gl-js/api/)
+The map was built with [Mapbox GL](https://www.mapbox.com/mapbox-gl-js/api/).
 
 ### To build yourself
 1. `git clone https://github.com/Camru/Iditarod.git`
